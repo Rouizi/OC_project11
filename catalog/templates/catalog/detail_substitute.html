@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block query %}
+  <div class=" container starter-template">
+    <h1>{{ substitute.name }}</h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+    <div class="row nutrition">
+        <div class="col-sm-offset-1 col-sm-3 col-xs-offset-3 col-xs-5 div-nutriscore">
+          <img class="img-nutriscore" src="{{ substitute.nutri_score.url }}" alt='{{ substitute.nutri_score.name }}' />
+        </div>
+        <div class="col-sm-offset-2 col-sm-4 col-xs-offset-3 col-xs-6">
+          <p class="repere">Repères nutritionnels pour 100g :</p>
+          <img class="img-nutrition" src="{{ substitute.nutrition.url }}" alt="{{ substitute.nutrition.name }}" />
+        </div>
+    </div>
+    <div class="row div-link">
+      <a class="col-xs-offset-2 col-xs-8 link-openfood" href="{{ substitute.url }}">Voir la fiche d'OpenFoodFacts</a>
+    </div>
+{% endblock %}

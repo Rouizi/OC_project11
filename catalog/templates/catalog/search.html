@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block query %}
+  <div class=" container starter-template">
+    <h1>
+      {% if query %}
+        {{ query.capitalize }}
+      {% elif product %}
+        {{ product.name.capitalize }}
+      {% endif %}
+    </h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+  <div class="row">
+    <h2 class="col-xs-12">{{ message }}</h2>
+  </div>
+  <div class="row">
+    <hr class="col-lg-offset-55 col-xs-1">
+  </div>
+  
+  <div class="row">
+      <h3 class="col-xs-12">
+        {% if products %}
+        Choisissez le produit que vous voulez substituer
+        {% elif substitutes %}
+        Vous pouvez remplacer votre produit par le(s) produit(s) suivant(s) :
+        {% endif %}
+      </h2>
+  </div>
+
+  {% if products|length_is:"0" %}
+  <div class="row">
+    <h3>Votre recherche n'a donné aucun résultat</h3>
+  </div>
+  {% elif substitutes|length_is:"0" %}
+    <div class="row">
+      <h3>Le produit rechrché n'a pas de substitut de meilleur qualité</h3>
+    </div>
+  {% else %} 
+  
+    {% if products %}
+      <div class="row div-products">
+        {% for product in products %}
+          <div class="col-sm-4">
+            <div class="row div-product">
+              <div class="col-sm-12 coloffset2 col-xs-8">
+                <a class="link-product" href="{% url 'catalog:list_substitute' product.id %}" title="{{ product.name }}">
+                  <div class="div-img">
+                    <img class="img-product" src="{{ product.picture.url }}" alt="{{ product.picture.name }}" />
+                  </div>
+                  <span class="nutriscore">
+                    {% if 'nutriscore-a.svg' in product.nutri_score.url %}A
+                    {% elif 'nutriscore-b.svg' in product.nutri_score.url %}B
+                    {% elif 'nutriscore-c.svg' in product.nutri_score.url %}C
+                    {% elif 'nutriscore-d.svg' in product.nutri_score.url %}D
+                    {% elif 'nutriscore-e.svg' in product.nutri_score.url %}E
+                    {% endif %}
+
+                  </span>
+                  <div class="product-name">{{ product.name|truncatewords:10 }}</div>
+                </a>  
+              </div> 
+            </div> 
+          </div>
+          {% if forloop.counter|divisibleby:3 %}<div class="clearfix"></div>{% endif %}
+        {% endfor %}
+      </div>
+    
+    {% elif substitutes %}
+      <div class="row div-products">
+        {% for substitute in substitutes %}
+          <div class="col-sm-4">
+            <div class="row div-product">
+              <div class="col-sm-12 coloffset2 col-xs-8">
+                <a class="link-product" href="{% url 'catalog:detail_substitute' substitute.id %}" title="{{ substitute.name }}">
+                  <div class="div-img">
+                    <img class="img-product" src="{{ substitute.picture.url }}" alt="{{ substitute.picture.name }}" />
+                  </div>
+                  <span class="nutriscore">
+                    {% if 'nutriscore-a.svg' in substitute.nutri_score.url %}A
+                    {% elif 'nutriscore-b.svg' in substitute.nutri_score.url %}B
+                    {% elif 'nutriscore-c.svg' in substitute.nutri_score.url %}C
+                    {% elif 'nutriscore-d.svg' in substitute.nutri_score.url %}D
+                    {% elif 'nutriscore-e.svg' in substitute.nutri_score.url %}E
+                    {% endif %}
+                  </span>
+                  <div class="product-name">{{ substitute.name|truncatewords:10 }}</div>
+                </a>  
+                <a href="{% url 'users:save_product' substitute.id  %}">
+                  <i class="fas fa-save"> Sauvegarder</i> 
+                </a>
+              </div> 
+            </div> 
+          </div>
+          {% if forloop.counter|divisibleby:3 %}<div class="clearfix"></div>{% endif %}
+        {% endfor %}
+      </div>
+
+    {%endif%}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block query %}
+  <div class=" container starter-template">
+    <h1>Erreur 404</h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+  <div class="row">
+    <p class="col-xs-12">Page non trouvé</p>
+  </div>
+  <div class="row">
+      <p class="col-xs-12"><a href="{% url 'index' %}">Revenir à l'accueil</a></p>
+  </div>
+{% endblock %}

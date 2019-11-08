@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block query %}
+  <div class=" container starter-template">
+    <h1>{{ user.username }}</h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+  <div class='row'>
+    <div class="col-xs-offset-3 col-xs-6 profile" >Adresse électronique : {{ user.email }}</div>
+  </div>
+{% endblock %}
