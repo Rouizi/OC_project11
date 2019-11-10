@@ -66,7 +66,6 @@ def insert_data_in_database():
     # recording of products
     i = 1
     for cat_name, dict_prod in dict_cat_prod.items():
-        print("cat_name: ", cat_name)
         category = Category.objects.filter(name=cat_name)
         print("CATEGORY: ", category[0])
         for prod_name, values in dict_prod.items():
@@ -115,3 +114,4 @@ def insert_data_in_database():
             print(p)
             print(p[0])
             s.composition.add(p[0])
+

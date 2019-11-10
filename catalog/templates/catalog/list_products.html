@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block query %}
+  <div class=" container starter-template">
+    <h1>Liste des produits</h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+  <form class="col-lg-5 pull-right" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p class="field-form">
+        {{ field.label_tag }}
+        {{ field }}
+      </p>
+    {% endfor %}
+  </form>
+  
+  <div class="col-sm-12 table-responsive">
+    <table class="table table-bordered table-striped table-condensed category">
+      <thead>
+        <tr>
+          <th>Produits</th>
+          <th>Nutriscore</th>
+          <th>codebare</th>
+          <th>catégorie</th>
+        </tr>
+      </thead>
+    
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td><a class="pull-left" href="{% url 'catalog:search' %}?query={{ product.barcode }}" title="voir les substituts de ce produit">{{ product.name }}</a></td>
+            <td>
+              {% if 'nutriscore-a.svg' in product.nutri_score.url %}A
+              {% elif 'nutriscore-b.svg' in product.nutri_score.url %}B
+              {% elif 'nutriscore-c.svg' in product.nutri_score.url %}C
+              {% elif 'nutriscore-d.svg' in product.nutri_score.url %}D
+              {% elif 'nutriscore-e.svg' in product.nutri_score.url %}E
+              {% endif %}
+            </td>
+            <td>{{ product.barcode }}</td>
+            <td>{{ product.category.name }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}{% if order_by %}&order_by={{ order_by }}{% endif %}&cat_id={{ cat_id }}">Précédente</a> -
+      {% endif %}
+    
+      <span class="current">
+        Page {{ products.number }} sur 
+        <a href="?page={{ products.paginator.num_pages }}{% if order_by %}&order_by={{ order_by }}{% endif %}&cat_id={{ cat_id }}">{{ products.paginator.num_pages }}</a>
+      </span>
+    
+      {% if products.has_next %}
+        - <a href="?page={{ products.next_page_number }}{% if order_by %}&order_by={{ order_by }}{% endif %}&cat_id={{ cat_id }}">Suivante</a>
+      {% endif %}
+    </div>
+  </div>
+  
+  
+{% endblock %}

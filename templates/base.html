@@ -20,6 +20,7 @@
     <script src="https://kit.fontawesome.com/ad6328b9e0.js"></script>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'catalog/css/style-catalog.css' %}">
     <link rel="stylesheet" href="{% static 'users/css/style-users.css' %}">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -49,10 +50,13 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'img/logo_pur_beurre.png' %}" alt="logo" /><span class="home">Pur Beurre</span></a>
+          
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right ul-form">
-            <li class="active">
+            <li><a class="product" href="{% url 'catalog:list_categories' %}" >Catégories</a></li>
+            <li><a class="product" href="{% url 'catalog:list_products' %}" >Porduits</a></li>
+            <li class="active hidden-sm">
               <form class="form-group" action="{% url 'catalog:search' %}" method="get">
                 <input type="search" name="query" class="input-md form-control" placeholder="Rechercher un produit">
               </form>
@@ -219,8 +223,9 @@
     <footer>
       <div class="container div-footer">
         <div class="row">
-          <div class="col-xs-offset-1 col-xs-4"><a href="{% url 'catalog:legal' %}" class="footer-contact">Mentions légales</a></div>
-          <div class="col-xs-offset-3 col-xs-4"><a href="mailto:cinorouizi@hotmail.fr" class="footer-contact">Contact</a></div>
+          <div class="col-xs-3"><a href="{% url 'catalog:legal' %}" class="footer-contact">Mentions légales</a></div>
+          <div class="col-xs-offset-1 col-xs-3"><a href="mailto:cinorouizi@hotmail.fr" class="footer-contact">Contact</a></div>
+          <div class="col-xs-offset-1 col-xs-3"><a href="https://github.com/Rouizi/OC_project11" class="footer-contact">Code source</a></div>
         </div>
       </div>
     </footer>
@@ -237,23 +242,31 @@
             $(document).scroll(function () {
                 var $nav = $(".navbar-fixed-top");
                 $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+
+                if ($('.product').offset().top > 111) {
+                  $('.product').css('color', 'black')
+                }
+                else {
+                  $('.product').css('color', 'white')
+                }
             });
             $('.navbar-nav li a').focus(function() {
-              $(this).css('background-color', 'transparent')
+              $(this).css('background-color', 'transparent');
             });       
             {% if "Accueil" in title %}
-            $('header').css('height', '760px')
+            $('header').css('height', '760px');
             {% endif %}  
             {% if "Accueil" in title %}
-            $('.div-imgs').css('border', '0px').css('background-color', 'white')
+            $('.div-imgs').css('border', '0px').css('background-color', 'white');
             {% endif %}
             {% if product %}
-            $('body').css('background', 'url("{{ product.picture.url }}") fixed no-repeat').css('background-color', '#252322').css('background-position', '50% 22%')
+            $('body').css('background', 'url("{{ product.picture.url }}") fixed no-repeat').css('background-color', '#252322').css('background-position', '50% 22%');
             {% elif substitute %}
-            $('body').css('background', 'url("{{ substitute.picture.url }}")')
+            $('body').css('background', 'url("{{ substitute.picture.url }}")');
             {% endif %}
+            
+            
 
-          
         });    
     </script>
   </body>

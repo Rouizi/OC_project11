@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block query %}
+  <div class=" container starter-template">
+    <h1>Liste des catégories</h1>
+  </div> 
+{% endblock %}
+
+{% block section_content %}
+  <table class="table table-bordered table-striped table-condensed category">
+    <thead>
+      <tr>
+        <th>Ctagories</th>
+        <th>Produits</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      {% for category in categories %}
+        <tr>
+          <td><a href="{% url 'catalog:list_products' %}?cat_id={{ category.id }}">{{ category.name }}</a></td>
+          <!-- category.product_set.all.count is the number of products that the category contains-->
+          <td class="pull-left">{{ category.product_set.all.count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+{% endblock %}

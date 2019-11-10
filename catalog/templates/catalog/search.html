@@ -65,6 +65,23 @@
           </div>
           {% if forloop.counter|divisibleby:3 %}<div class="clearfix"></div>{% endif %}
         {% endfor %}
+
+      </div>
+
+      <div class="row pagination">
+        {% if products.has_previous %}
+          <a href="?page={{ products.previous_page_number }}&query={{ query }}">Précédente</a> -
+        {% endif %}
+      
+        <span class="current">
+          Page {{ products.number }} sur 
+          <a href="?page={{ products.paginator.num_pages }}&query={{ query }}">{{ products.paginator.num_pages }}</a>
+        </span>
+      
+        {% if products.has_next %}
+          - <a href="?page={{ products.next_page_number }}&query={{ query }}">Suivante</a>
+        {% endif %}
+        
       </div>
     
     {% elif substitutes %}
