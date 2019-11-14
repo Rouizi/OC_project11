@@ -12,11 +12,36 @@
           <img class="img-nutriscore" src="{{ substitute.nutri_score.url }}" alt='{{ substitute.nutri_score.name }}' />
         </div>
         <div class="col-sm-offset-2 col-sm-4 col-xs-offset-3 col-xs-6">
-          <p class="repere">Repères nutritionnels pour 100g :</p>
+          <p class="repere paragraph">Repères nutritionnels pour 100g :</p>
           <img class="img-nutrition" src="{{ substitute.nutrition.url }}" alt="{{ substitute.nutrition.name }}" />
         </div>
     </div>
     <div class="row div-link">
       <a class="col-xs-offset-2 col-xs-8 link-openfood" href="{{ substitute.url }}">Voir la fiche d'OpenFoodFacts</a>
     </div>
+    <div class="row">
+      <form class="col-lg-12" method="post">
+        {% csrf_token %}
+          <div class="row">
+            {% for field in form %}
+            <div class="col-lg-12">
+              <p class="leave-comment">Laisser un commentaire pour ce produit :</p></br> 
+              {{ field }}
+            </div>
+            {% endfor %}
+            <input class="btn btn-primary btn-lg submit pull-right" type="submit" value="Soumettre" />
+          </div>  
+      </form>
+    </div>
+    
+    {% for comment in comments %}
+      <div class="row">
+        <hr>
+        <div class="div-comment">
+          <p class="comment"><a href="{% url 'users:profile' %}?comment_author_id={{ comment.author.id }}">{{ comment.author }}</a> a dit le {{ comment.date_added|date:"DATE_FORMAT" }} :</p><br>
+          <p class="comment">{{ comment.content }}</p>
+        </div>
+      </div>
+      
+    {% endfor %}
 {% endblock %}

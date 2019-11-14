@@ -23,10 +23,11 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     # For security reasons, it is essential to change the admin URL because hackers know it
-    path('my-super-connexion-to-admin/', admin.site.urls),
+    path('`Z[U\tg\nMvnI;w=l_1EXeLOmy/', admin.site.urls),
     url(r'^$', views.index, name="index"),
     url(r'^catalog/', include(('catalog.urls', 'catalog'), namespace='catalog')),
     url(r'^users/', include(('users.urls', 'users'), namespace='users')),
+    url(r'^blog/', include(('blog.urls', 'blog'), namespace='blog')),
 ]
 
 if settings.DEBUG:

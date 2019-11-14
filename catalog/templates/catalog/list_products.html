@@ -10,7 +10,7 @@
   <form class="col-lg-5 pull-right" method="post">
     {% csrf_token %}
     {% for field in form %}
-      <p class="field-form">
+      <p class="field-form paragraph">
         {{ field.label_tag }}
         {{ field }}
       </p>

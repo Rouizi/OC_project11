@@ -15,8 +15,8 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255, db_index=True)
-    nutri_score = models.ImageField(upload_to="images/")
-    barcode = models.CharField(max_length=30)
+    nutri_score = models.ImageField(upload_to="images/", db_index=True)
+    barcode = models.CharField(max_length=30, db_index=True)
     picture = models.ImageField(upload_to="images/")
     # I made assumption that a product can belong to a single category so as not to complicate things
     category = models.ForeignKey('Category', on_delete=models.CASCADE)

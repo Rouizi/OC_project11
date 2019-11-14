@@ -11,17 +11,17 @@
     <h2 class="col-xs-12">Se connecter</h2>
   </div>
   <div class="row">
-    <hr class="col-lg-offset-55 col-xs-1">
+    <hr class="col-lg-offset-55 col-xs-1 line">
   </div>
 
   {% if error %}
-    <p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
+    <p class="paragraph"><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
   {% endif %}
 
   <form class="col-sm-offset-4 col-xs-offset-2 col-xs-6" method="post">
     {% csrf_token %}
     {% for field in form %}
-      <p class="field-form">
+      <p class="field-form paragraph">
         {{ field.label_tag }}<br>
         {{ field }}
       </p>
@@ -29,10 +29,10 @@
     <input class="btn btn-primary btn-lg submit" type="submit" value="Se connecter" />
   </form>
   <div class="row">
-    <p class="col-xs-offset-2 col-xs-8 redirect">Nouveau utilisateur? 
+    <p class="col-xs-offset-2 col-xs-8 redirect paragraph">Nouveau utilisateur? 
       <a href="{% url 'users:signup' %}">Cliquez ici pour vous enregistrer!</a>
     </p>
-    <p class="col-xs-offset-2 col-xs-8 redirect">Mot de passe oublier?
+    <p class="col-xs-offset-2 col-xs-8 redirect paragraph">Mot de passe oublier?
       <a href="{% url 'users:password_reset' %}">Cliquez ici pour le réinitialiser</a>
     </p>
   </div>

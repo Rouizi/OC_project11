@@ -7,7 +7,18 @@
 {% endblock %}
 
 {% block section_content %}
+  <div class="row">
+    <h2 class="col-xs-12">Profile de l'utilisateur : {% if comment_author %}{{ comment_author.username }}{% else %}{{ user.username }}{% endif %}</h2>
+  </div>
+  <div class="row">
+    <hr class="col-lg-offset-55 col-xs-1 line">
+  </div>
+
   <div class='row'>
+    <p class="col-xs-offset-1 col-xs-10 profile">{% for edit in edits %}{{ edit.about_me }}{% endfor %}</p>
+    <p class="col-xs-offset-1 col-xs-10 profile">Dernière visite le : {{ user.last_login }}</p>
     <div class="col-xs-offset-3 col-xs-6 profile" >Adresse électronique : {{ user.email }}</div>
+
+    {% if not comment_author or user.id == comment_author.id %}<a class="col-xs-offset-3 col-xs-6 edit-profile" href="{% url 'users:edit_profile' %}">Modifier votre profile</a>{% endif %}
   </div>
 {% endblock %}

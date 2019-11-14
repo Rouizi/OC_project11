@@ -1,7 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from catalog.models import Category, Product, Substitute
 from django.core.paginator import Paginator, EmptyPage
 from catalog.forms import OptionForm
+from blog.models import Comment
+from blog.forms import CommentForm
+from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 
@@ -29,20 +34,40 @@ def detail_substitute(request, substitute_id):
     id = int(substitute_id)
     substitute = get_object_or_404(Substitute, id=id)
     title = "%s" %substitute.name
+    comments = Comment.objects.filter(substitute=id).order_by('-date_added')
 
-    return render(request, 'catalog/detail_substitute.html', {'substitute': substitute, 'title': title})
+    if request.method == 'POST':
+        if request.user.is_anonymous:
+            messages.add_message(request, messages.ERROR,
+                                 'Vous devez vous connecter pour pouvoir poster un message!')
+            form = CommentForm()
+            return render(request, 'catalog/detail_substitute.html', 
+                    {'substitute': substitute, 'title': title, 'form': form, 'comments': comments}) 
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            user = User.objects.filter(id=request.user.id)
+            comment.author = user[0]
+            comment.substitute = substitute
+            comment.save()
+            form = CommentForm()
+    else:
+        form = CommentForm()
+
+    return render(request, 'catalog/detail_substitute.html', 
+                    {'substitute': substitute, 'title': title, 'form': form, 'comments': comments})
 
 
 def search(request):
     title = "Liste des produits"
     query = request.GET['query']
     if not query:
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('name')
     else:
-        products = Product.objects.filter(name__icontains=query)
+        products = Product.objects.filter(name__icontains=query).order_by('name')
 
     if not products.exists():
-        products = Product.objects.filter(barcode=query)
+        products = Product.objects.filter(barcode=query).order_by('name')
 
     paginator = Paginator(products, 6) # 6 products per page
     if 'page' in request.GET:
