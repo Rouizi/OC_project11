@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from catalog.models import Substitute
 from users.models import EditProfile
+from blog.models import Comment
+from django.db import transaction
 
 
 
@@ -73,8 +75,10 @@ def profile(request):
     if 'comment_author_id' in request.GET:
         comment_author_id = request.GET['comment_author_id'] 
         comment_author = get_object_or_404(User, id=comment_author_id)
+        comments = Comment.objects.filter(author=comment_author).order_by('-date_added')
         edits = EditProfile.objects.filter(user=comment_author)
     else:
+        comments = Comment.objects.filter(author=current_user).order_by('-date_added')
         edits = EditProfile.objects.filter(user=current_user)
   
     return render(request, 'users/profile.html', locals())
@@ -102,6 +106,7 @@ def list_saved_products(request):
 
 
 @login_required
+@transaction.atomic
 def edit_profile(request):
     title = 'Editer le profile'
 
@@ -113,19 +118,21 @@ def edit_profile(request):
             about_me = form.cleaned_data["about_me"]
             user = get_object_or_404(User, id=request.user.id)
 
-            edit = EditProfile.objects.filter(user=user)
-            if edit.exists():
-                edit.update(about_me=about_me, user=user)
-                user.username = username
-                user.save()
-            else:
-                edit = EditProfile(about_me=about_me, user=user)
-                user.username = username
-                edit.save()
-                user.save()
-            messages.add_message(request, messages.SUCCESS,
-                                     'Vos changements ont été enregistrés.')
-            return redirect(reverse('users:profile'))
+            # We use a transaction so that if one of the requests below fails all previous ones are canceled
+            with transaction.atomic():
+                edit = EditProfile.objects.filter(user=user)
+                if edit.exists():
+                    edit.update(about_me=about_me, user=user)
+                    user.username = username
+                    user.save()
+                else:
+                    edit = EditProfile(about_me=about_me, user=user)
+                    user.username = username
+                    edit.save()
+                    user.save()
+                messages.add_message(request, messages.SUCCESS,
+                                        'Vos changements ont été enregistrés.')
+                return redirect(reverse('users:profile'))
     else:
         edit = EditProfile.objects.filter(user=request.user)
         about_me = edit[0].about_me if edit.exists() else 'Décrivez vous en quelques mots'

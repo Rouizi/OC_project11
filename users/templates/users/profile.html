@@ -21,4 +21,14 @@
 
     {% if not comment_author or user.id == comment_author.id %}<a class="col-xs-offset-3 col-xs-6 edit-profile" href="{% url 'users:edit_profile' %}">Modifier votre profile</a>{% endif %}
   </div>
+
+  {% for comment in comments %}
+      <hr>
+      <div class="div-comment">
+        <p class="comment">{{ comment.author }} a dit le {{ comment.date_added|date:"DATE_FORMAT" }} sur <a href="{% url 'catalog:detail_substitute' comment.substitute.id %}">ce produit</a> :</p><br>
+        <p class="comment">{{ comment.content }}</p>
+      </div>
+    
+  {% endfor %}
+  <div
 {% endblock %}

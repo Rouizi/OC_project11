@@ -5,12 +5,11 @@
   .col-lg-offset{margin-left: 20%;} 
 }
 @media (min-width: 768px) {
-  .col-lg-offset-35{margin-left: 35%} 
   h1{font-size: 4em} 
   h2{font-size: 2.5em} 
+  #results{width: 47%}
 }
 @media (max-width: 768px) {
-  .col-lg-offset-35{margin-left: 20.8%} 
   .navbar-fixed-top{background-color: white} 
   .coloffset2{margin-left: 16.6%}
 }
@@ -295,4 +294,13 @@ footer{
 }
 .link-legal{
   color: #f05e48;
+}
+#results{
+  background-color: rgb(255, 255, 255); 
+  color:rgb(121, 121, 121); 
+  border: 1px solid grey;
+  font-size: 1.2em; 
+  border-radius: 5px; 
+  position: absolute; 
+  z-index: 2; 
 }

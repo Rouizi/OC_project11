@@ -7,6 +7,8 @@ from blog.forms import CommentForm
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db import transaction
+from django.http import JsonResponse
 
 
 
@@ -30,6 +32,7 @@ def list_substitute(request, product_id):
                    'message': message, 'product': product})
 
 
+@transaction.atomic
 def detail_substitute(request, substitute_id):
     id = int(substitute_id)
     substitute = get_object_or_404(Substitute, id=id)
@@ -45,12 +48,14 @@ def detail_substitute(request, substitute_id):
                     {'substitute': substitute, 'title': title, 'form': form, 'comments': comments}) 
         form = CommentForm(request.POST)
         if form.is_valid():
-            comment = form.save(commit=False)
-            user = User.objects.filter(id=request.user.id)
-            comment.author = user[0]
-            comment.substitute = substitute
-            comment.save()
-            form = CommentForm()
+            # We use a transaction so that if one of the requests below fails all previous ones are canceled
+            with transaction.atomic():
+                comment = form.save(commit=False)
+                user = User.objects.filter(id=request.user.id)
+                comment.author = user[0]
+                comment.substitute = substitute
+                comment.save()
+                form = CommentForm()
     else:
         form = CommentForm()
 
@@ -60,7 +65,18 @@ def detail_substitute(request, substitute_id):
 
 def search(request):
     title = "Liste des produits"
-    query = request.GET['query']
+    if 'query' in request.GET:
+        query = request.GET['query']
+    # Auto-completion system with AJAX
+    if 'content' in request.GET:
+        content = request.GET.get('content', None)
+        products = Product.objects.filter(name__icontains=content)[0:10].values()
+        # We have to return somthing even if no result has been found so that the function break
+        if not products.exists():
+            return JsonResponse({'status': 'ZERO_RESULTS'})
+        else:
+            return JsonResponse({'status': 'ok', "products": list(products)})
+    
     if not query:
         products = Product.objects.all().order_by('name')
     else:
@@ -147,3 +163,4 @@ def list_products(request):
 
     return render(request, 'catalog/list_products.html',
                   {'title': title, 'products': prods, 'form': form, 'cat_id': cat_id})
+

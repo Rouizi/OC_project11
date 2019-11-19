@@ -58,7 +58,7 @@
             <li><a class="product" href="{% url 'catalog:list_products' %}" >Porduits</a></li>
             <li class="active hidden-sm">
               <form class="form-group" action="{% url 'catalog:search' %}" method="get">
-                <input type="search" name="query" class="input-md form-control" placeholder="Rechercher un produit">
+                <input type="search" name="query" class="input-md form-control" autocomplete="off" placeholder="Rechercher un produit">
               </form>
             </li>
             <li>
@@ -96,14 +96,17 @@
         <hr class="col-xs-offset-5 col-xs-1 line" >
         <h2 class="col-lg-offset col-md-7 col-xs-12">Trouver un produit de substitution pour ceux que vous consommez tous les jours </h2>
       </div>
-      <form class="form-inline col-lg-offset-35" action="{% url 'catalog:search' %}" method="get">
-        <div class="input-group col-sm-7 col-xs-7">
-          <input type="text" class="input-lg form-control" name="query" placeholder="Recherchez un produit que vous voulez substituer">
+      <form class="form-inline row" action="{% url 'catalog:search' %}" method="get">
+        <div class="input-group col-xs-offset-1 col-sm-offset-3 col-xs-10 col-sm-8">
+          <input id="search" type="text" class="input-lg form-control" name="query" autocomplete="off" placeholder="Recherchez un produit que vous voulez substituer">
           <span class="input-group-btn">
             <button class="btn btn-lg" type="submit">Chercher</button>
           </span>
         </div>
       </form><!-- /.form-->
+      <div class="row">
+        <div class="col-xs-offset-1 col-sm-offset-3 col-xs-10" id="results"></div>
+      </div>
       {% endblock %}
     </header>
 
@@ -239,33 +242,132 @@
     <script src="https://getbootstrap.com/docs/3.3/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script>
         $(function () {
-            $(document).scroll(function () {
-                var $nav = $(".navbar-fixed-top");
-                $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+          $(document).scroll(function () {
+            var $nav = $(".navbar-fixed-top");
+            $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
 
-                if ($('.product').offset().top > 111) {
-                  $('.product').css('color', 'black')
-                }
-                else {
-                  $('.product').css('color', 'white')
-                }
-            });
-            $('.navbar-nav li a').focus(function() {
-              $(this).css('background-color', 'transparent');
-            });       
-            {% if "Accueil" in title %}
-            $('header').css('height', '760px');
-            {% endif %}  
-            {% if "Accueil" in title %}
-            $('.div-imgs').css('border', '0px').css('background-color', 'white');
-            {% endif %}
-            {% if product %}
-            $('body').css('background', 'url("{{ product.picture.url }}") fixed no-repeat').css('background-color', '#252322').css('background-position', '50% 22%');
-            {% elif substitute %}
-            $('body').css('background', 'url("{{ substitute.picture.url }}")');
-            {% endif %}
+            if ($('.product').offset().top > 111) {
+              $('.product').css('color', 'black')
+            }
+            else {
+              $('.product').css('color', 'white')
+            }
+          });
+          $('.navbar-nav li a').focus(function() {
+            $(this).css('background-color', 'transparent');
+          });       
+          {% if "Accueil" in title %}
+          $('header').css('height', '760px');
+          {% endif %}  
+          {% if "Accueil" in title %}
+          $('.div-imgs').css('border', '0px').css('background-color', 'white');
+          {% endif %}
+          {% if product %}
+          $('body').css('background', 'url("{{ product.picture.url }}") fixed no-repeat').css('background-color', '#252322').css('background-position', '50% 22%');
+          {% elif substitute %}
+          $('body').css('background', 'url("{{ substitute.picture.url }}")');
+          {% endif %}
              
 
+          // Auto-completion system with AJAX
+          var search = $('#search')
+              results = $('#results')
+              previousValue = search.val()
+              selectResult = -1;
+
+          results.css('display', 'none');
+          
+          search.keyup(function(e){
+            if (search.val() != previousValue && selectResult == -1) {
+              previousValue = search.val();
+              if ($(this).val().length > 1) { // We send request to server only if the user tape 2 or more charaters
+                getResults($(this).val());
+              }
+              else {
+                results.html('');
+              }
+            }
+            
+            else if (e.keyCode == 38) { // If the pressed key is the "up" arrow
+              selectResult--;
+              
+              if (selectResult == -2) {
+                $('#results div').eq($('#results div').length - 1).css('border-radius', '5px').css('background-color', 'rgb(219, 219, 219)');
+                search.val($('#results div').eq($('#results div').length - 1).text());
+                $('#results div').eq(0).css('background-color', 'white');
+                selectResult = $('#results div').length - 1;
+              }
+              $('#results div').eq(selectResult).css('border-radius', '5px').css('background-color', 'rgb(219, 219, 219)');
+              search.val($('#results div').eq(selectResult).text());
+              $('#results div').eq(selectResult + 1).css('background-color', 'white');
+
+              if (selectResult == -1) {
+                search.val(previousValue);
+                $('#results div').eq(selectResult).css('background-color', 'white');
+              }
+            }
+            else if (e.keyCode == 40) { // If the pressed key is the "down" arrow
+              selectResult++;
+              if (selectResult > 0) {
+                $('#results div').eq(selectResult - 1).css('background-color', 'white');
+              }
+              $('#results div').eq(selectResult).css('border-radius', '5px').css('background-color', 'rgb(219, 219, 219)');
+              search.val($('#results div').eq(selectResult).text())
+              
+              if (selectResult == $('#results div').length) {
+                search.val(previousValue);
+                selectResult = -1;
+              }
+            }
+            else {
+              selectResult = -1;
+            }
+          })
+
+          function getResults(keywords) {
+            $.ajax({
+              url: '/catalog/search',
+              type: 'GET',
+              data: {
+                'content': keywords
+              },
+              dataType: 'text',
+              success: callaback
+            });
+          }
+
+          // function called in AJAX return
+          function callaback(data) {
+            data = JSON.parse(data);
+            if (data['status'] === 'ok') {
+              displayResults(data)
+            }
+            else { 
+              results.css('display', 'none'); // We hide the container if we don't have results
+            }
+          }
+
+          function displayResults(response) {
+            results.css('display', 'block');
+            results.html('');
+            var responseLength = response['products'].length;
+            for (var i = 0; i < responseLength; i++) {
+              div = $('<div>').appendTo(results);
+              div.html(response['products'][i]['name']);// response['products'][i]['name'] is the name of the product
+
+              div.click(function () {
+                search.val($(this).text());
+                previousValue = $(this).text();
+                results.css('display', 'none');
+              })
+              div.mouseover(function () {
+                $(this).css('border-radius', '5px').css('background-color', 'rgb(219, 219, 219)');
+              })
+              div.mouseout(function () {
+                $(this).css('background-color', 'white');
+              })
+            }  
+          }
         });    
     </script>
   </body>
