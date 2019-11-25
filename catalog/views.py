@@ -118,7 +118,7 @@ def list_categories(request):
 def list_products(request):
     title = 'Liste des produits'
     # cat_id == 0 when user want to display all products
-    cat_id = request.GET['cat_id'] if 'cat_id' in request.GET and request.GET['cat_id'] != 0 else 0
+    cat_id = request.GET['cat_id'] if 'cat_id' in request.GET else 0
 
     cat_id = int(cat_id)
     products = Product.objects.all().order_by('name') if cat_id == 0 else \

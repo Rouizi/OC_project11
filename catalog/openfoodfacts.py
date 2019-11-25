@@ -80,7 +80,7 @@ class OpenFoodFacts:
         for prod in dict_cat_prod.values(): # type(prod) = dict
             for prod_details in prod.values(): # type(prod_details) = list
                 id_product += 1
-                print('id_product: ', id_product)
+                #print('id_product: ', id_product)
                 # for exemple: r_prod = requests.get('https://fr.openfoodfacts.org/api/v0/produit/4060800002242.json')
                 # prod_details is a list that contains the nutri_score, the barcode and the url of the product image
                 r_prod = requests.get(self.url_prod + '/' + prod_details[1] + '.json')
@@ -97,13 +97,12 @@ class OpenFoodFacts:
                     dict_categories[nb_prod] = name_cat
                 min_nb_prod = min(dict_categories.keys())
                 cat_with_min_prod = dict_categories[min_nb_prod]
-                # We search on the category that contains the least products to find a product that
-                # could be considered as a substitute
-                # and we research on only 20 pages so as not to take too much time to find 6 substitutes
+                # We search on the category that contains the least products to find a product that could be considered
+                # as a substitute and we research on only 20 pages so as not to take too much time to find 6 substitutes
                 nb_substitute = 0
                 page_substitute = []
                 for i in range(1, 20):
-                    print('page: ', i)
+                    #print('page: ', i)
                     if nb_substitute > 6:
                         break
                     # exemple: requests.get('https://fr.openfoodfacts.org/categorie/Barres chocolatées/1.json')
@@ -149,12 +148,12 @@ class OpenFoodFacts:
                                         else:
                                             dict_substitute[subst_details['product_name'].lower()][-1].append(prod_details[1])
 
-                                        print(subst_details['product_name'])
-                print(dict_substitute)
+                                        #print(subst_details['product_name'])
+                #print(dict_substitute)
 
-        print(list_of_categories)
-        print(dict_cat_prod)
-        print(dict_substitute)
+        #print(list_of_categories)
+        #print(dict_cat_prod)
+        #print(dict_substitute)
         return dict_substitute, dict_cat_prod, list_of_categories
 
 

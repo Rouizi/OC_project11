@@ -70,8 +70,7 @@ def log_out(request):
 def profile(request):
     title = 'Profile'
 
-    current_user_id = request.user.id
-    current_user = get_object_or_404(User, id=current_user_id)
+    current_user = get_object_or_404(User, id=request.user.id)
     if 'comment_author_id' in request.GET:
         comment_author_id = request.GET['comment_author_id'] 
         comment_author = get_object_or_404(User, id=comment_author_id)

@@ -25,7 +25,7 @@
   {% for comment in comments %}
       <hr>
       <div class="div-comment">
-        <p class="comment">{{ comment.author }} a dit le {{ comment.date_added|date:"DATE_FORMAT" }} sur <a href="{% url 'catalog:detail_substitute' comment.substitute.id %}">ce produit</a> :</p><br>
+        <p class="comment">{{ comment.author }} a laissé un commentaire le {{ comment.date_added|date:"DATE_FORMAT" }} sur <a href="{% url 'catalog:detail_substitute' comment.substitute.id %}">ce produit</a> :</p><br>
         <p class="comment">{{ comment.content }}</p>
       </div>
     

@@ -308,11 +308,10 @@
             }
             else if (e.keyCode == 40) { // If the pressed key is the "down" arrow
               selectResult++;
-              if (selectResult > 0) {
-                $('#results div').eq(selectResult - 1).css('background-color', 'white');
-              }
+
               $('#results div').eq(selectResult).css('border-radius', '5px').css('background-color', 'rgb(219, 219, 219)');
-              search.val($('#results div').eq(selectResult).text())
+              search.val($('#results div').eq(selectResult).text());
+              $('#results div').eq(selectResult - 1).css('background-color', 'white');
               
               if (selectResult == $('#results div').length) {
                 search.val(previousValue);
