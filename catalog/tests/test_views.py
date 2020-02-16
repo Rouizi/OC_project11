@@ -54,7 +54,7 @@ class DetailSubstituteViewTest(TestCase):
         substitute_id = Substitute.objects.get(name='substitute1').id
         response = self.client.get(reverse('catalog:detail_substitute', args=(substitute_id,)))
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.context['substitute'].name, str(self.substitute))
+        self.assertEqual(response.context['substitute'].name, str(self.substitute))
         # Check we used correct template
         self.assertTemplateUsed(response, 'catalog/detail_substitute.html')
 
@@ -67,14 +67,14 @@ class DetailSubstituteViewTest(TestCase):
         # Try to post message without login
         response = self.client.post(reverse('catalog:detail_substitute', args=(self.substitute.id,)),  {'content': 'good product'})
         messages = list(response.context['messages'])
-        self.assertEquals(str(messages[0]), 'Vous devez vous connecter pour pouvoir poster un message!')
+        self.assertEqual(str(messages[0]), 'Vous devez vous connecter pour pouvoir poster un message!')
 
     def test_new_comment_is_registred(self):
         old_comments = Comment.objects.count() # count comments before a request
         login = self.client.login(username='jacob', password='top_secret')
         response = self.client.post(reverse('catalog:detail_substitute', args=(self.substitute.id,)),  {'content': 'good product'})
         new_comments = Comment.objects.count() # count comments after
-        self.assertEquals(new_comments, old_comments + 1) # make sure 1 comment was added
+        self.assertEqual(new_comments, old_comments + 1) # make sure 1 comment was added
 
 
 
@@ -88,35 +88,35 @@ class SearchViewTest(TestCase):
 
     def test_auto_completion_system(self):
         response = self.client.get(reverse('catalog:search'),  {'content': 'test'})
-        self.assertEquals(json.loads(response.content.decode('utf-8'))['status'], 'ZERO_RESULTS')
+        self.assertEqual(json.loads(response.content.decode('utf-8'))['status'], 'ZERO_RESULTS')
         # Here we have all the products because 'product' is contained in 'product1', 'product2' ...
         response = self.client.get(reverse('catalog:search'),  {'content': 'product'}) 
         for i in self.product.keys():
-            self.assertEquals(json.loads(response.content.decode('utf-8'))['products'][i]['name'], self.product[i].name)
+            self.assertEqual(json.loads(response.content.decode('utf-8'))['products'][i]['name'], self.product[i].name)
 
 
     def test_search_returns_200(self):
         # When the variable 'content' does not appear in the dictionary of the request, it means that the user has submitted his search
         response = self.client.get(reverse('catalog:search'),  {'query': '', 'page': 2}) # if query = '' we get all the products
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         # Check we used correct template
         self.assertTemplateUsed(response, 'catalog/search.html')
         # Check that the second page contains 4 products (so the first contains 6 products)
-        self.assertEquals(len(response.context['products']), 4)
+        self.assertEqual(len(response.context['products']), 4)
         for i in range(4):
-            self.assertEquals((response.context['products'][i]), self.product[i + 6]) # i + 6 because we are in the second page
+            self.assertEqual((response.context['products'][i]), self.product[i + 6]) # i + 6 because we are in the second page
         
         response = self.client.get(reverse('catalog:search'),  {'query': 'product1'})
         # Check that we have all the products whose names contain the content of the 'query' variable
-        self.assertEquals(response.context['products'][0], self.product[1])
+        self.assertEqual(response.context['products'][0], self.product[1])
         response = self.client.get(reverse('catalog:search'),  {'query': '4444'})
         # Check that if no product was found by name we search by barcode
-        self.assertEquals(response.context['products'][0], self.product[4])
+        self.assertEqual(response.context['products'][0], self.product[4])
 
     def test_pagination_returns_last_page_if_page_out_of_range(self):
         response = self.client.get(reverse('catalog:search'),  {'query': '',  'page': 999})
         # Check that if page is out of range (e.g. 999), deliver last page of results
-        self.assertEquals(response.context['products'].number, 2)
+        self.assertEqual(response.context['products'].number, 2)
         
 
 
@@ -157,7 +157,7 @@ class ListProductsViewTest(TestCase):
     def test_list_products_returns_all_products_of_selected_category(self):
         response = self.client.get(reverse('catalog:list_products'), {'cat_id': self.category2.id})
         # Check that we have all products of category2 (only 3 products belongs to this category)
-        self.assertEquals(len(response.context['products']), len(self.product_belong_category2.values()))
+        self.assertEqual(len(response.context['products']), len(self.product_belong_category2.values()))
         # Check that all products we have are the same of products that belongs to category2
         for i in range(3):
             self.assertTrue(response.context['products'][i] == self.product_belong_category2[i + 50])
@@ -169,21 +169,21 @@ class ListProductsViewTest(TestCase):
         # Check we used correct template
         self.assertTemplateUsed(response, 'catalog/list_products.html')
         # Check that we have all products
-        self.assertEquals(response.context['products'].paginator.count, 53)
+        self.assertEqual(response.context['products'].paginator.count, 53)
 
 
     def test_pagination(self):
         response = self.client.get(reverse('catalog:list_products'))
         # Check that the first page contains 50 products
-        self.assertEquals(len(response.context['products'].paginator.page(1)), 50)
+        self.assertEqual(len(response.context['products'].paginator.page(1)), 50)
         # Check that the second page contains 3 products
-        self.assertEquals(len(response.context['products'].paginator.page(2)), 3)
+        self.assertEqual(len(response.context['products'].paginator.page(2)), 3)
         response = self.client.get(reverse('catalog:list_products'), {'page': 999})
         # Check that if page is out of range (e.g. 999), deliver last page of results
-        self.assertEquals(response.context['products'].number, 2)
+        self.assertEqual(response.context['products'].number, 2)
         # Same test with 'order_by' parameter
         response = self.client.get('http://127.0.0.1:8000/catalog/products/?page=999&order_by=nutri_score')
-        self.assertEquals(response.context['products'].number, 2)
+        self.assertEqual(response.context['products'].number, 2)
 
         
 

@@ -16,4 +16,4 @@ class CommentModelTest(TestCase):
     def test_object_name(self):
         comment = Comment.objects.get(content='test')
         expected_object_name = f'{self.user.username}'
-        self.assertEquals(expected_object_name, str(comment))
+        self.assertEqual(expected_object_name, str(comment))

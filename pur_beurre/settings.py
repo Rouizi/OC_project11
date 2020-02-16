@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-#import dj_database_url
-#import django_heroku
+import dj_database_url
+import django_heroku
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -32,7 +32,7 @@ else:
     DEBUG = True
 
 
-ALLOWED_HOSTS = []#['purbeurre-oc8.herokuapp.com']
+ALLOWED_HOSTS = ['purbeurre-oc11.herokuapp.com']
 
 
 # Application definition
@@ -44,23 +44,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'debug_toolbar',
     'catalog',
     'users',
-    #'storages',
+    'storages',
     'blog',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'pur_beurre.urls'
@@ -95,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',   
         'NAME': 'openfoodfacts',             
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': os.environ.get('PASSWORD'),
         'HOST': '',                    
         'PORT': '5432',                         
     }
@@ -140,13 +138,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
-
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -154,14 +145,13 @@ INTERNAL_IPS = ['127.0.0.1']
 # Amazon Simple Storage Service (S3) to store media file
 # see https://devcenter.heroku.com/articles/s3 for more details
 
-"""DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "") 
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 AWS_STORAGE_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", "")
 AWS_QUERYSTRING_AUTH = False 
 AWS_S3_CUSTOM_DOMAIN = os.environ.get("AWS_S3_CUSTOM_DOMAIN", "")
-MEDIA_URL = os.environ.get("MEDIA_URL", "")"""
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get("MEDIA_URL", "")
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 
@@ -169,10 +159,10 @@ LOGIN_URL = '/users/log_in/'
 
 # Sending email with sendgrid see https://app.sendgrid.com/guide/integrate/langs/smtp got mor details
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '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'
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")#'smtp.sendgrid.net'
+EMAIL_PORT = os.environ.get("EMAIL_PORT", "")#587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")#'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")#'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'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "L'équipe Pur Beure <noreply@purbeurre.com>"
 
@@ -196,4 +186,4 @@ if os.environ.get('ENV') == 'PRODUCTION':
     DATABASES['default'].update(db_from_env)
 
 
-#django_heroku.settings(locals())
+django_heroku.settings(locals())

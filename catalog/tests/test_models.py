@@ -9,7 +9,7 @@ class CategoryModelTest(TestCase):
     def test_category_name(self):
         category = Category.objects.get(name='category1')
         expected_category_name = f'{self.category.name}'
-        self.assertAlmostEquals(expected_category_name, str(category))
+        self.assertAlmostEqual(expected_category_name, str(category))
 
 
 class ProductModelTest(TestCase):
@@ -20,7 +20,7 @@ class ProductModelTest(TestCase):
     def test_product_name(self):
         product = Product.objects.get(name='product1')
         expected_product_name = f'{self.product.name}'
-        self.assertAlmostEquals(expected_product_name, str(product))
+        self.assertAlmostEqual(expected_product_name, str(product))
 
 
 class SubstituteModelTest(TestCase):
@@ -30,4 +30,4 @@ class SubstituteModelTest(TestCase):
     def test_substitute_name(self):
         substitute = Substitute.objects.get(name='substitute1')
         expected_substitute_name = f'{self.substitute.name}'
-        self.assertAlmostEquals(expected_substitute_name, str(substitute))
+        self.assertAlmostEqual(expected_substitute_name, str(substitute))
