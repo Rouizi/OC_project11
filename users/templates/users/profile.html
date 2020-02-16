@@ -15,11 +15,21 @@
   </div>
 
   <div class='row'>
-    <p class="col-xs-offset-1 col-xs-10 profile">{% for edit in edits %}{{ edit.about_me }}{% endfor %}</p>
-    <p class="col-xs-offset-1 col-xs-10 profile">Dernière visite le : {{ user.last_login }}</p>
-    <div class="col-xs-offset-3 col-xs-6 profile" >Adresse électronique : {{ user.email }}</div>
-
-    {% if not comment_author or user.id == comment_author.id %}<a class="col-xs-offset-3 col-xs-6 edit-profile" href="{% url 'users:edit_profile' %}">Modifier votre profile</a>{% endif %}
+    <p class="col-sm-offset-1 col-sm-10 col-xs-12 profile">{% for edit in edits %}{{ edit.about_me }}{% endfor %}</p>
+    {% if not comment_author or user.id == comment_author.id %}
+    <p class="col-sm-offset-1 col-sm-10 col-xs-12 profile">Dernière visite le : {{ user.last_login }}</p>
+    <div class="col-sm-offset-3 col-sm-6 col-xs-12 profile">Adresse électronique : {{ user.email }}</div>
+    <a class="col-sm-offset-3 col-sm-6 col-xs-12 edit-profile" href="{% url 'users:edit_profile' %}">
+      Modifier votre profile
+    </a>
+    {% else %}
+    <p class="col-sm-offset-1 col-sm-10 col-xs-12 profile">
+      Dernière visite le : {{ comment_author.last_login }}
+    </p>
+    <div class="col-sm-offset-3 col-sm-6 col-xs-12 profile">
+      Adresse électronique : {{ comment_author.email }}
+    </div>
+    {% endif %}
   </div>
 
   {% for comment in comments %}

@@ -59,7 +59,7 @@ body {
   padding-top: 20px;
 }
 .product{
-  color: white;
+  color: rgb(62, 73, 136);
   font-size: 1.5em;
   margin-right: 20px
 }
@@ -280,6 +280,7 @@ footer{
   font-size: 1.2em;
 }
 .div-comment{
+  border-radius: 10px;
   background-color: rgb(245, 245, 245); 
   padding: 10px; 
   margin: 10px;

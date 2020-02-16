@@ -38,7 +38,7 @@ def detail_substitute(request, substitute_id):
     substitute = get_object_or_404(Substitute, id=id)
     title = "%s" %substitute.name
     comments = Comment.objects.filter(substitute=id).order_by('-date_added')
-
+    
     if request.method == 'POST':
         if request.user.is_anonymous:
             messages.add_message(request, messages.ERROR,

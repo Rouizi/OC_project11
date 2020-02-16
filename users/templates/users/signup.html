@@ -14,22 +14,25 @@
     <hr class="col-lg-offset-55 col-xs-1 line">
   </div>
   
-  <form class="col-sm-offset-4 col-xs-offset-2 col-xs-6" method="post">
-    {% csrf_token %}
-    {% for field in form %}
+  <div class="row">
+    <form class="col-sm-offset-4 col-sm-6 col-xs-12" method="post">
+      {% csrf_token %}
+      {% for field in form %}
       <p class="field-form paragraph">
         {{ field.label_tag }}<br>
         {{ field }}<br>
-        
+    
         {% for error in field.errors %}
-          <p class="error paragraph">{{ error }}</p>
+        <p class="error paragraph">{{ error }}</p>
         {% endfor %}
       </p>
-    {% endfor %}
-    <button class="btn btn-primary btn-lg submit" type="submit">S'inscrire</button>
-  </form>
+      {% endfor %}
+      <button class="btn btn-primary btn-lg submit" type="submit">S'inscrire</button>
+    </form>
+  </div>
+  
   <div class="row">
-    <p class="col-xs-offset-2 col-xs-8 redirect paragraph">Vous avez dèjà un compte? 
+    <p class="col-sm-offset-2 col-sm-8 col-xs-12 redirect paragraph">Vous avez dèjà un compte? 
       <a href="{% url 'users:log_in' %}">Cliquez ici pour vous connecter!</a>
     </p>
   </div>
