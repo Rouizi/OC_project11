@@ -159,10 +159,10 @@ LOGIN_URL = '/users/log_in/'
 
 # Sending email with sendgrid see https://app.sendgrid.com/guide/integrate/langs/smtp got mor details
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "")#'smtp.sendgrid.net'
-EMAIL_PORT = os.environ.get("EMAIL_PORT", "")#587
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")#'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")#'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'
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", "")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "L'équipe Pur Beure <noreply@purbeurre.com>"
 
