@@ -3,8 +3,8 @@
 This project is version 2 of the project [OC_project8](https://github.com/Rouizi/OC_project8), 
 you can read the readme on [this link](https://github.com/Rouizi/OC_project8) to see the improvements that have been made.
 
-I did not deploy this project because it is similar to the project OC_project8, you can run it in local to see the improvements
+You can visit the website at the following address: https://purbeurre-oc11.herokuapp.com/
 
-If you find an error on the website or need help please contact me on: cinorouizi@hotmail.fr or on facebook search: Yacine Rouizi.
+You can contact me on : cinorouizi@hotmail.fr or cinorouizi@gmail.com
 
 [![HitCount](http://hits.dwyl.io/rouizi/OC_project11.svg)](http://hits.dwyl.io/rouizi/OC_project11)
